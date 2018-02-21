@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
 const nodemailer = require('nodemailer');
 const passwordHash = require('password-hash');
-const sessions = require('express-session');
+const session = require('express-session');
 let urlencodedParser = bodyParser.urlencoded({
   extended: true
 });
@@ -29,8 +29,8 @@ let transporter = nodemailer.createTransport({
 let uri = "mongodb://localhost:27017";
 
 // App Setup
-app.use(sessions({
-  secret: '&#SSNJadsdb934932&67==',
+app.use(session({
+  secret: 'theAppS30r3t',
   resave: false,
   saveUninitialized: true
 }));
@@ -41,9 +41,39 @@ app.get('/', (req,res) => {
 });
 app.listen(3000 , () => console.log('Running on Port 3000'));
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
-app.get('/index', (req,res) => res.render('index'));
-app.get('/login_page', (req, res) => res.render('login'));
-app.get('/register_page', (req, res) => res.render('register'));
+
+app.get('/', (req,res) =>{
+  if(req.session.username == null) {
+    res.render('index');
+  }else{
+    res.render('error', {
+      info: "User already logged in",
+      LOGGEDIN: `${req.session.username} Logged In`
+    });
+  }
+});
+
+app.get('/login_page', (req, res) => {
+  if (req.session.username == null) {
+    res.render('login');
+  } else {
+    res.render('error', { 
+      info:"User already logged in",
+      LOGGEDIN: `${req.session.username} Logged In`
+    });
+  }
+});
+
+app.get('/register_page', (req, res) => {
+  if (req.session.username == null) {
+    res.render('register');
+  } else {
+    res.render('error', { 
+      info: "User already logged in",
+      LOGGEDIN: `${req.session.username} Logged In`
+     });
+  }
+});
 
 /*
 ----- Handle Nodemailer Setup Form
@@ -175,19 +205,20 @@ app.post('/getAnotherCode', urlencodedParser, (req,res) => {
 ----- Handle Login Form
 */
 app.post('/login', urlencodedParser ,(req,res) => {
-  session = req.session;
   MongoClient.connect(uri , (err , db) => {
     if(err) res.render('error' , {DBERROR : "Database Connection Failed"});
     let myDB = db.db("NodeJS_AUTH").collection('users');
-    myDB.findOne({email: req.body.l_email , password: req.body.l_password}, (err,userExists) => {
+    myDB.findOne({email: req.body.l_email}, (err,userExists) => {
       // If user is registered
       if(userExists){
         if ((userExists.email == req.body.l_email) && (passwordHash.verify(req.body.l_password, userExists.password))){
           if(userExists.verified == 1){
             // Start Session
+            req.session.username = userExists.name;
             res.render('error', { 
               LOGGEDIN: `${userExists.name} Logged In`
             });
+            
           }else{
             res.render('verify', {
               info: "User Not Verified",
@@ -210,7 +241,13 @@ app.post('/login', urlencodedParser ,(req,res) => {
   });
 });
 
-
+app.post('/logout', (req,res) => {
+  req.session.username = null;
+  res.render('index', {
+    info: "User Logged Out",
+    LOGGEDIN: null
+  });
+});
 
 //404 page
 app.use(function (req, res) {
