@@ -8,19 +8,26 @@ html
     title Authention System In Node-JS
   body
     .navbar.navbar-expand-lg.navbar-light.bg-light.fixed-top
-      a.navbar-brand(href="index") Auth System
+      a.navbar-brand(href="/") Auth System
       button.navbar-toggler(type="button" , data-toggle="collapse"  , data-target="#navbar")
         span.navbar-toggler-icon
       .collapse.navbar-collapse#navbar
         ul.navbar-nav.ml-auto
-          li.nav-item
-            a.nav-link(href="/login_page") 
-              i.fa.fa-sign-in &nbsp; 
-              span Login
-          li.nav-item
-            a.nav-link(href="/register_page") 
-              i.fa.fa-user-plus &nbsp; 
-              span Register
+          if(!LOGGEDIN)
+            li.nav-item
+              a.nav-link(href="/login_page") 
+                i.fa.fa-sign-in &nbsp; 
+                span Login
+            li.nav-item
+              a.nav-link(href="/register_page") 
+                i.fa.fa-user-plus &nbsp; 
+                span Register
+          else
+            li.nav-item
+              form(action="/logout",method="POST")
+                button.nav-link(type="submit",style="outline:none; background: transparent; border: none;") 
+                  i.fa.fa-sign-out &nbsp; 
+                  span Logout
     block theBody
     if(info)
       .alert.alert-primary.fixed-right-bottom(role="alert") #{info}
