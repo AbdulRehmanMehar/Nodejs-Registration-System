@@ -1,0 +1,21 @@
+html,body{
+  margin: 0;
+  padding: 0;
+}
+.main{
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.fixed-right-bottom{
+  position: fixed;
+  width: auto;
+  right: 0;
+  bottom: 0;
+  margin: 10px 20px;
+}
+.hidden{
+  display: none
+}
