@@ -1,0 +1,28 @@
+extends template.pug
+block theBody 
+  .main
+    .container
+      form(style="width: 100%" , action="/register" , method="post")
+        .form-group
+          h1 Register Here
+          h6 Already registered? Please 
+            a(href="/login_page") Login
+        .form-group
+          label Full Name
+          input.form-control(type="text",name="r_name" , placeholder="Please Enter Full Name" , required="true")  
+        .form-group
+          label Email Address
+          if(userEmail)
+            input.form-control(type="email", name="r_email" , value=userEmail , required="true")
+          else
+            input.form-control(type="email", name="r_email" , placeholder="Please Enter Email" , required="true")
+        .row
+          .form-group.col
+            label Password
+            input.form-control(type="password",name="r_password" , placeholder="Please Enter Password" , required="true")
+          .form-group.col
+            label Confirm Password
+            input.form-control(type="password",name="r_cnfrm_password" , placeholder="Re-type Password" , required="true")
+        .form-group
+          button.btn.btn-outline-primary(type="submit" , style="width: 100%") Register 
+            i.fa.fa-user-plus

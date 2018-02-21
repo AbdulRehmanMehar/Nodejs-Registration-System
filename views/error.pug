@@ -1,0 +1,29 @@
+extends template.pug
+block theBody
+  .main
+    .container.text-center
+      if(DBERROR)
+        h1 An error occurd while connecting to database
+        h5 Please try restarting the db server or check the config for db.
+        h6 Error Type : #{DBERROR}
+      if(NOTFOUNDERROR)
+        h1 The Page you're looking for is not available
+        h6 Error Type : #{NOTFOUNDERROR}
+      if(LOGGEDIN)
+        h1 #{LOGGEDIN}
+      if(NODEMAILERERR)
+        h1 #{NODEMAILERERR}
+        h4 It seems that You might not have set nodemailer properties
+        h5 Please Fill the form below
+        form(action="/mailerConfig",method="POST" , style="width: 100%")
+          .form-group
+            label Service Provider
+            input.form-control(type="text",placeholder="Service Provider such as gmail etc.",required="true",name="mc_SP")
+          .form-group
+            label Email Address
+            input.form-control(type="email",placeholder="Email to send mail from",required="true",name="mc_Email")
+          .form-group
+            label Password
+            input.form-control(type="password",placeholder="Password of the email above",required="true",name="mc_Password")
+          .form-group
+            button.btn.btn-outline-info(type="submit" , style="width: 100%") Save Changes

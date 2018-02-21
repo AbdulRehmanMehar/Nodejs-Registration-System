@@ -1,0 +1,21 @@
+extends template.pug
+block theBody
+  .main
+    .container
+      form(style="width: 100%" , action="login" , method="post")
+        .form-group
+          h1 Login Here
+          h6 Not have account? Please 
+            a(href="/register_page") Register 
+        .form-group
+          label Email Address
+          if(userEmail)
+            input.form-control(type="email" ,name="l_email" , value="userEmail" , required="true")
+          else
+            input.form-control(type="email" ,name="l_email" , placeholder="Please Enter Email" , required="true")          
+        .form-group
+          label Password
+          input.form-control(type="password",name="l_password" , placeholder="Please Enter Password" , required="true")
+        .form-group
+          button.btn.btn-outline-primary(type="submit" , style="width: 100%") Login 
+            i.fa.fa-sign-in
