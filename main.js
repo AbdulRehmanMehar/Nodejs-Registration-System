@@ -179,7 +179,7 @@ app.post('/login', urlencodedParser ,(req,res) => {
   MongoClient.connect(uri , (err , db) => {
     if(err) res.render('error' , {DBERROR : "Database Connection Failed"});
     let myDB = db.db("NodeJS_AUTH").collection('users');
-    myDB.findOne({email: req.body.l_email}, (err,userExists) => {
+    myDB.findOne({email: req.body.l_email , password: req.body.l_password}, (err,userExists) => {
       // If user is registered
       if(userExists){
         if ((userExists.email == req.body.l_email) && (passwordHash.verify(req.body.l_password, userExists.password))){
