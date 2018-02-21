@@ -36,9 +36,6 @@ app.use(session({
 }));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine' , 'pug');
-app.get('/', (req,res) => {
-  res.render('index');
-});
 app.listen(3000 , () => console.log('Running on Port 3000'));
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
@@ -74,6 +71,7 @@ app.get('/register_page', (req, res) => {
      });
   }
 });
+
 
 /*
 ----- Handle Nodemailer Setup Form
@@ -249,7 +247,18 @@ app.post('/logout', (req,res) => {
   });
 });
 
+
+
+
+
 //404 page
 app.use(function (req, res) {
-  res.render('error' , {NOTFOUNDERROR: "Page Not Found"});
-})
+  if (req.session.username == null) {
+    res.render('error', { NOTFOUNDERROR: "Page Not Found" });
+  } else {
+    res.render('error', {
+      info: "User already logged in",
+      LOGGEDIN: `${req.session.username} Logged In`
+    });
+  }
+});
